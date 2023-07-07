@@ -2,12 +2,13 @@ package com.example.calldefender.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.example.calldefender.R
 import com.example.calldefender.common.PermissionControllerImpl
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,18 +20,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(findViewById(R.id.my_toolbar))
-        initDrawerLayout()
+        initFragments()
         setPermissionsController()
-    }
-
-    private fun initDrawerLayout() {
-        drawerLayout = findViewById(R.id.my_drawer_layout)
-        actionBarDrawerToggle =
-            ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun setPermissionsController() {
@@ -38,21 +29,31 @@ class MainActivity : AppCompatActivity() {
         permissionsController.requestDialerPermission(this)
     }
 
+    private fun initFragments() {
+        val callsFragment = CallsFragment()
+        val settingsFragment = SettingsFragment()
+
+        setCurrentFragment(callsFragment)
+
+        findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.callsItem -> setCurrentFragment(callsFragment)
+                R.id.settingsItem -> setCurrentFragment(settingsFragment)
+            }
+            true
+        }
+    }
+
+    private fun setCurrentFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment, fragment)
+            commit()
+        }
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         permissionsController.handleDialerPermissionResult(this, requestCode, resultCode)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_search -> {
-            true
-        }
-
-        else -> {
-            if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-                true
-            } else super.onOptionsItemSelected(item)
-        }
     }
 }

@@ -8,7 +8,7 @@ import com.example.calldefender.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class CallsFragment : Fragment(R.layout.fragment_calls) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val data = listOf("data1", "data2")
