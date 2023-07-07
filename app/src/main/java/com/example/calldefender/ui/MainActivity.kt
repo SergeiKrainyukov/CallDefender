@@ -2,9 +2,7 @@ package com.example.calldefender.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.calldefender.R
 import com.example.calldefender.common.PermissionControllerImpl
@@ -13,9 +11,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private val permissionsController = PermissionControllerImpl()
-
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
