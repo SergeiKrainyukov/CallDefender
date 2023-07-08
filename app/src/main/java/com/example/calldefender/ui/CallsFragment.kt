@@ -11,16 +11,19 @@ import com.google.android.material.tabs.TabLayoutMediator
 class CallsFragment : Fragment(R.layout.fragment_calls) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val data = listOf("data1", "data2")
+
+        initTabs()
+    }
+
+    private fun initTabs() {
+        val data = listOf("Все", "Заблокированные")
         val adapter = ViewPagerAdapter(data)
-        val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
+        val viewPager = requireView().findViewById<ViewPager2>(R.id.view_pager)
+        val tabLayout = requireView().findViewById<TabLayout>(R.id.tabLayout)
         viewPager.adapter = adapter
-
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = "Tab ${position + 1}"
+            tab.text = data[position]
         }.attach()
-
     }
 
 }
