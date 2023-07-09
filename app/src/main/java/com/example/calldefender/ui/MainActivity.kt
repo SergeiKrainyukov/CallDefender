@@ -6,31 +6,37 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.calldefender.R
 import com.example.calldefender.common.PermissionControllerImpl
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.calldefender.databinding.ActivityMainBinding
+import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
+import com.example.calldefender.ui.fragment.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
     private val permissionsController = PermissionControllerImpl()
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        initFragments()
-        setPermissionsController()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initBottomNavigation()
+        checkPermissions()
     }
 
-    private fun setPermissionsController() {
-        permissionsController.registerActivityForRequestPermissions(this)
-        permissionsController.requestDialerPermission(this)
+    private fun checkPermissions() {
+        with(permissionsController) {
+            registerActivityForRequestPermissions(this@MainActivity)
+            requestDialerPermission(this@MainActivity)
+        }
     }
 
-    private fun initFragments() {
+    private fun initBottomNavigation() {
         val callsFragment = CallsFragment()
         val settingsFragment = SettingsFragment()
 
         setCurrentFragment(callsFragment)
 
-        findViewById<BottomNavigationView>(R.id.bottomNavigationView).setOnItemSelectedListener {
+        binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.callsItem -> setCurrentFragment(callsFragment)
                 R.id.settingsItem -> setCurrentFragment(settingsFragment)

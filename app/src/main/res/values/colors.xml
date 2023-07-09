@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="transasia_dark">#09324b</color>
+    <color name="primary_color">#09324b</color>
     <color name="horizontal_divider_color">#DADADA</color>
     <color name="warning">#EC7910</color>
 
