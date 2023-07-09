@@ -5,19 +5,24 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.calldefender.R
-import com.example.calldefender.common.PermissionControllerImpl
+import com.example.calldefender.common.PermissionsController
 import com.example.calldefender.databinding.ActivityMainBinding
-import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
+import com.example.calldefender.di.MainComponent
 import com.example.calldefender.ui.fragment.SettingsFragment
+import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private val permissionsController = PermissionControllerImpl()
+    @Inject
+    lateinit var permissionsController: PermissionsController
+
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        MainComponent.create().inject(this)
         setContentView(binding.root)
         initBottomNavigation()
         checkPermissions()

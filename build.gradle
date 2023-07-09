@@ -13,7 +13,7 @@ ext {
     constraint_layout = "2.1.4"
 
     //Dagger
-    dagger = "2.43.2"
+    dagger = "2.46.1"
     dagger_compiler = "2.42"
 
     //Testing

@@ -43,7 +43,7 @@ dependencies {
 
     //Dagger
     implementation "com.google.dagger:dagger:$dagger"
-    kapt "com.google.dagger:dagger-compiler:$dagger_compiler"
+    kapt "com.google.dagger:dagger-compiler:$dagger"
 
     //Testing
     testImplementation "junit:junit:$junit"
