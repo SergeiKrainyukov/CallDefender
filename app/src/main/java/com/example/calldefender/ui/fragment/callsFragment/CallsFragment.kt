@@ -28,12 +28,21 @@ class CallsFragment : Fragment() {
     }
 
     private fun initTabs() {
-        val data = listOf("Все", "Заблокированные")
+        val data = listOf(
+            listOf(
+                CallUi("+79991234567", "20.08.2023", CallStatus.ACCEPTED),
+                CallUi("+78881934568", "18.08.2023", CallStatus.REJECTED)
+            ),
+            listOf(CallUi("+78881934568", "18.08.2023", CallStatus.REJECTED)),
+        )
         val adapter = ViewPagerAdapter(data)
         with(binding) {
             viewPager.adapter = adapter
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = data[position]
+                tab.text = when (position) {
+                    0 -> "Все"
+                    else -> "Отклоненные"
+                }
             }.attach()
         }
     }
