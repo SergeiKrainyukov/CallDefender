@@ -3,5 +3,6 @@
     <style name="Base.Theme.CallDefender" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     </style>
 
-    <style name="Theme.CallDefender" parent="Base.Theme.CallDefender" />
+    <style name="Theme.CallDefender" parent="Base.Theme.CallDefender">
+    </style>
 </resources>

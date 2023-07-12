@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary_color">#09324b</color>
+    <color name="colorAccent">#24AAD0</color>
     <color name="horizontal_divider_color">#DADADA</color>
     <color name="warning">#EC7910</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#BDBDBD</color>
-
 
     <color name="accepted_call_color">#27AE60</color>
     <color name="rejected_call_color">#E24444</color>
