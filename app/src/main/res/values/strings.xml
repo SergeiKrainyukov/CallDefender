@@ -6,6 +6,8 @@
 
     <!-- CallsFragment -->
     <string name="calls">Звонки</string>
+    <string name="all_calls">Все</string>
+    <string name="rejected_calls">Отклоненные</string>
 
     <!-- SettingsFragment -->
     <string name="settings">Настройки</string>

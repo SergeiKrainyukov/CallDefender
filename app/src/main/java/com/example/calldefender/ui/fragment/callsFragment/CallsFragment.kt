@@ -5,7 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.calldefender.R
 import com.example.calldefender.databinding.FragmentCallsBinding
+import com.example.calldefender.ui.fragment.callsFragment.adapter.ViewPagerAdapter
+import com.example.calldefender.ui.model.CallStatus
+import com.example.calldefender.ui.model.CallUi
 import com.google.android.material.tabs.TabLayoutMediator
 
 class CallsFragment : Fragment() {
@@ -40,8 +44,8 @@ class CallsFragment : Fragment() {
             viewPager.adapter = adapter
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.text = when (position) {
-                    0 -> "Все"
-                    else -> "Отклоненные"
+                    0 -> getString(R.string.all_calls)
+                    else -> getString(R.string.rejected_calls)
                 }
             }.attach()
         }
