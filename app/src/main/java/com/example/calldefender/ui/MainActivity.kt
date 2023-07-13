@@ -36,15 +36,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomNavigation() {
-        val callsFragment = CallsFragment()
-        val settingsFragment = SettingsFragment()
-
-        setCurrentFragment(callsFragment)
+        setCurrentFragment(CallsFragment())
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.callsItem -> setCurrentFragment(callsFragment)
-                R.id.settingsItem -> setCurrentFragment(settingsFragment)
+                R.id.callsItem -> setCurrentFragment(CallsFragment())
+                R.id.settingsItem -> setCurrentFragment(SettingsFragment())
             }
             true
         }
