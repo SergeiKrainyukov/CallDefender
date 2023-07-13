@@ -19,6 +19,10 @@ ext {
     //Room
     room = "2.5.2"
 
+    //RxJava2
+    rxjava = "2.2.13"
+    rxandroid = "2.1.1"
+
     //Testing
     junit = "4.13.2"
     android_junit = "1.1.5"
