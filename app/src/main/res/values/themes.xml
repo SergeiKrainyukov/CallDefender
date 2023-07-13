@@ -4,5 +4,7 @@
     </style>
 
     <style name="Theme.CallDefender" parent="Base.Theme.CallDefender">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_color</item>
     </style>
 </resources>
