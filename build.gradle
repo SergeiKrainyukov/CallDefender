@@ -16,6 +16,9 @@ ext {
     dagger = "2.46.1"
     dagger_compiler = "2.42"
 
+    //Room
+    room = "2.5.2"
+
     //Testing
     junit = "4.13.2"
     android_junit = "1.1.5"
