@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
-import com.example.calldefender.data.CallEntity
 import com.example.calldefender.databinding.FragmentCallsBinding
+import com.example.calldefender.di.DaggerMainComponent
 import com.example.calldefender.ui.fragment.callsFragment.adapter.ViewPagerAdapter
 import com.example.calldefender.ui.model.CallStatus
 import com.example.calldefender.ui.model.CallUi
@@ -20,12 +20,20 @@ import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 class CallsFragment : Fragment() {
 
+    @Inject
+    lateinit var viewModel: CallsFragmentViewModel
     private lateinit var binding: FragmentCallsBinding
     private val disposables = CompositeDisposable()
     private var data: MutableList<MutableList<CallUi>> = mutableListOf()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DaggerMainComponent.create().inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,7 +85,7 @@ class CallsFragment : Fragment() {
         val dao =
             (requireActivity().application as CallDefenderApp).getAppDatabase().callEntityDao()
         disposables.add(
-            dao.insert(CallEntity(0, "+79991234567", Date().time, false))
+            dao.insert(viewModel.entity)
                 .subscribeOn(Schedulers.io()) // Операции с базой данных выполняются в фоновом потоке
                 .observeOn(AndroidSchedulers.mainThread()) // Результаты обрабатываются в UI-потоке
                 .subscribe({

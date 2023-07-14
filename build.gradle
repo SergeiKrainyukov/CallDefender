@@ -12,6 +12,9 @@ ext {
     material = "1.9.0"
     constraint_layout = "2.1.4"
 
+    //Lifecycle
+    lifecycle = "2.6.1"
+
     //Dagger
     dagger = "2.46.1"
     dagger_compiler = "2.42"
