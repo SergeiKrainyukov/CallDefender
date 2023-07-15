@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.databinding.FragmentCallsBinding
-import com.example.calldefender.ui.fragment.callsFragment.adapter.ViewPagerAdapter
+import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapter
+import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapterData
 import com.example.calldefender.ui.model.CallType
 import com.google.android.material.tabs.TabLayoutMediator
 import javax.inject.Inject
@@ -43,12 +44,12 @@ class CallsFragment : Fragment() {
 
     private fun bindViewModel() {
         viewModel.callsDataLiveData().observe(viewLifecycleOwner) {
-
+            (binding.viewPager.adapter as CallsFragmentViewPagerAdapter).setData(it)
         }
     }
 
     private fun initTabs() {
-        val adapter = ViewPagerAdapter(mutableListOf())
+        val adapter = CallsFragmentViewPagerAdapter(CallsFragmentViewPagerAdapterData())
         with(binding) {
             viewPager.adapter = adapter
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->

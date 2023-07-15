@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -14,8 +13,8 @@ interface CallEntityDao {
     fun insert(callEntity: CallEntity): Completable
 
     @Query("SELECT * FROM callentity")
-    fun getAll(): Maybe<List<CallEntity>>
+    fun getAll(): Single<List<CallEntity>>
 
-    @Query("SELECT * FROM callentity WHERE call_number LIKE :callNumber")
+    @Query("SELECT * FROM callentity WHERE callNumber LIKE :callNumber")
     fun findByCallNumber(callNumber: String): Single<CallEntity>
 }

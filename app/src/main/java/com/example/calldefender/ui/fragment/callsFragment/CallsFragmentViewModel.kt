@@ -3,11 +3,16 @@ package com.example.calldefender.ui.fragment.callsFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.calldefender.common.DatePatterns
+import com.example.calldefender.common.formatToPattern
 import com.example.calldefender.data.CallEntityDao
-import com.example.calldefender.ui.fragment.callsFragment.adapter.CallTypeData
+import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapterData
+import com.example.calldefender.ui.model.CallType
+import com.example.calldefender.ui.model.CallUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.Date
 import javax.inject.Inject
 
 class CallsFragmentViewModel @Inject constructor(
@@ -16,8 +21,8 @@ class CallsFragmentViewModel @Inject constructor(
 
     private val disposables = CompositeDisposable()
 
-    private val callsDataLiveData = MutableLiveData<List<CallTypeData>>()
-    fun callsDataLiveData(): LiveData<List<CallTypeData>> = callsDataLiveData
+    private val callsDataLiveData = MutableLiveData<CallsFragmentViewPagerAdapterData>()
+    fun callsDataLiveData(): LiveData<CallsFragmentViewPagerAdapterData> = callsDataLiveData
 
     fun init() {
         disposables.add(
@@ -26,11 +31,21 @@ class CallsFragmentViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ callEntities ->
                     if (callEntities.isEmpty()) return@subscribe
-                    val data = mutableListOf<CallTypeData>()
-                    callsDataLiveData.value = data
-                }, { error ->
-
-                })
+                    val callsFragmentViewPagerAdapterData = CallsFragmentViewPagerAdapterData()
+                    CallType.values().forEach { callType ->
+                        val callsFilteredByType = callEntities.filter { callEntity ->
+                            callEntity.callType == callType.ordinal
+                        }.map { callEntity ->
+                            CallUi(
+                                callEntity.callNumber,
+                                Date(callEntity.callDate).formatToPattern(DatePatterns.DEFAULT.pattern),
+                                CallType.values()[callEntity.callType]
+                            )
+                        }
+                        callsFragmentViewPagerAdapterData.update(callsFilteredByType, callType)
+                    }
+                    callsDataLiveData.value = callsFragmentViewPagerAdapterData
+                }, {})
         )
     }
 
