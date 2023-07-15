@@ -1,4 +1,4 @@
-package com.example.calldefender.di
+package com.example.calldefender.di.modules
 
 import android.content.Context
 import com.example.calldefender.CallDefenderApp

@@ -1,7 +1,9 @@
-package com.example.calldefender.di
+package com.example.calldefender.di.modules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.calldefender.di.AppViewModelFactory
+import com.example.calldefender.di.ViewModelKey
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragmentViewModel
 import dagger.Binds
 import dagger.Module

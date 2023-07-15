@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class CallEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "callNumber") val callNumber: String,
     @ColumnInfo(name = "date") val callDate: Long,
     @ColumnInfo(name = "callType") val callType: Int

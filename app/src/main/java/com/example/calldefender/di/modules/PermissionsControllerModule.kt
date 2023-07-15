@@ -1,4 +1,4 @@
-package com.example.calldefender.di
+package com.example.calldefender.di.modules
 
 import com.example.calldefender.common.PermissionControllerImpl
 import com.example.calldefender.common.PermissionsController
