@@ -5,6 +5,7 @@ import com.example.calldefender.di.modules.DataModule
 import com.example.calldefender.di.modules.PermissionsControllerModule
 import com.example.calldefender.di.modules.RepositoryModule
 import com.example.calldefender.di.modules.ViewModelModule
+import com.example.calldefender.service.CallDefenderCallScreeningService
 import com.example.calldefender.ui.MainActivity
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
 import dagger.Component
@@ -23,4 +24,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(fragment: CallsFragment)
+    fun inject(service: CallDefenderCallScreeningService)
 }

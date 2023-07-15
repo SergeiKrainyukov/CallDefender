@@ -5,10 +5,27 @@ import android.content.Context
 import android.provider.ContactsContract
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import com.example.calldefender.CallDefenderApp
+import com.example.calldefender.common.DatePatterns
+import com.example.calldefender.common.formatToPattern
 import com.example.calldefender.common.parseCountryCode
 import com.example.calldefender.common.removeTelPrefix
+import com.example.calldefender.repository.CallsRepository
+import com.example.calldefender.ui.model.CallType
+import com.example.calldefender.ui.model.CallUi
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import java.util.Date
+import javax.inject.Inject
 
-class CallDefenderCallScreeningService : CallScreeningService() {
+class CallDefenderCallScreeningService: CallScreeningService() {
+    @Inject
+    lateinit var repository: CallsRepository
+
+    override fun onCreate() {
+        super.onCreate()
+        (application as CallDefenderApp).appComponent.inject(this)
+    }
 
     override fun onScreenCall(callDetails: Call.Details) {
         val phoneNumber = callDetails.handle.toString().removeTelPrefix().parseCountryCode()
@@ -27,6 +44,7 @@ class CallDefenderCallScreeningService : CallScreeningService() {
             setRejectCall(true)
             setDisallowCall(true)
             setSkipCallLog(false)
+            addCallToRepository(phoneNumber, CallType.REJECTED)
         }
         return response
     }
@@ -53,6 +71,18 @@ class CallDefenderCallScreeningService : CallScreeningService() {
             cursor.close()
         }
         return false
+    }
+
+    private fun addCallToRepository(callNumber: String, callType: CallType) {
+        repository.addCall(
+            CallUi(
+                callNumber,
+                Date().formatToPattern(DatePatterns.DEFAULT.pattern),
+                callType
+            )
+        ).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
     }
 
 }

@@ -28,7 +28,7 @@ class CallsFragmentViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ callEntities ->
                     if (callEntities.isEmpty()) {
-                        generateCalls()
+//                        generateCalls()
                         return@subscribe
                     }
                     val callsFragmentViewPagerAdapterData = CallsFragmentViewPagerAdapterData()
