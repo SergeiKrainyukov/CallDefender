@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.calldefender.common.DatePatterns
 import com.example.calldefender.common.formatToPattern
+import com.example.calldefender.data.CallEntity
 import com.example.calldefender.data.CallEntityDao
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapterData
 import com.example.calldefender.ui.model.CallType
@@ -30,11 +31,14 @@ class CallsFragmentViewModel @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ callEntities ->
-                    if (callEntities.isEmpty()) return@subscribe
+                    if (callEntities.isEmpty()) {
+                        generateCalls()
+                        return@subscribe
+                    }
                     val callsFragmentViewPagerAdapterData = CallsFragmentViewPagerAdapterData()
                     CallType.values().forEach { callType ->
                         val callsFilteredByType = callEntities.filter { callEntity ->
-                            callEntity.callType == callType.ordinal
+                            if (callType == CallType.ALL) true else callEntity.callType == callType.ordinal
                         }.map { callEntity ->
                             CallUi(
                                 callEntity.callNumber,
@@ -46,6 +50,33 @@ class CallsFragmentViewModel @Inject constructor(
                     }
                     callsDataLiveData.value = callsFragmentViewPagerAdapterData
                 }, {})
+        )
+    }
+
+    private fun generateCalls() {
+        disposables.add(
+            callEntityDao.insert(
+                CallEntity(
+                    0,
+                    "+79611877192",
+                    Date().time,
+                    CallType.ACCEPTED.ordinal
+                )
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+        )
+        disposables.add(
+            callEntityDao.insert(
+                CallEntity(
+                    1,
+                    "+79621878193",
+                    Date().time,
+                    CallType.REJECTED.ordinal
+                )
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
         )
     }
 

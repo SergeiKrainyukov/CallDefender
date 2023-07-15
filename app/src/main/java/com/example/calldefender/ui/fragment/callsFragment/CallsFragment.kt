@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
+import com.example.calldefender.data.CallEntityDao
 import com.example.calldefender.databinding.FragmentCallsBinding
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapter
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapterData
@@ -20,6 +21,9 @@ class CallsFragment : Fragment() {
     @Inject
     lateinit var viewModel: CallsFragmentViewModel
     private lateinit var binding: FragmentCallsBinding
+
+    @Inject
+    lateinit var callEntityDao: CallEntityDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
