@@ -1,6 +1,5 @@
 package com.example.calldefender.ui.fragment.callsFragment
 
-//import com.example.calldefender.di.DaggerMainComponent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
