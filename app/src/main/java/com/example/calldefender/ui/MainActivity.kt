@@ -4,10 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.common.PermissionsController
 import com.example.calldefender.databinding.ActivityMainBinding
-import com.example.calldefender.di.MainComponent
 import com.example.calldefender.ui.fragment.SettingsFragment
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        MainComponent.create().inject(this)
+        (application as CallDefenderApp).appComponent.inject(this)
         setContentView(binding.root)
         initBottomNavigation()
         checkPermissions()

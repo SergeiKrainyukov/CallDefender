@@ -1,22 +1,18 @@
 package com.example.calldefender.ui.fragment.callsFragment
 
+//import com.example.calldefender.di.DaggerMainComponent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.databinding.FragmentCallsBinding
-import com.example.calldefender.di.DaggerMainComponent
 import com.example.calldefender.ui.fragment.callsFragment.adapter.ViewPagerAdapter
-import com.example.calldefender.ui.model.CallStatus
 import com.example.calldefender.ui.model.CallUi
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,11 +24,10 @@ class CallsFragment : Fragment() {
     lateinit var viewModel: CallsFragmentViewModel
     private lateinit var binding: FragmentCallsBinding
     private val disposables = CompositeDisposable()
-    private var data: MutableList<MutableList<CallUi>> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerMainComponent.create().inject(this)
+        (requireActivity().application as CallDefenderApp).appComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -46,62 +41,17 @@ class CallsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
+        bindViewModel()
+        viewModel.init()
     }
 
-    private fun initData() {
-        val dao =
-            (requireActivity().application as CallDefenderApp).getAppDatabase().callEntityDao()
-        disposables.add(
-            dao.getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ callEntities ->
-                    if (callEntities.isEmpty()) {
-                        addEntities()
-                    } else {
-                        callEntities.forEach {
-                            if (data.isEmpty()) {
-                                data.add(mutableListOf())
-                                data.add(mutableListOf())
-                            }
-                            data[0].add(
-                                CallUi(
-                                    callNumber = it.callNumber,
-                                    callDate = Date(it.callDate).formatToPattern(DatePatterns.DEFAULT.pattern),
-                                    callStatus = if (it.rejected) CallStatus.REJECTED else CallStatus.ACCEPTED
-                                )
-                            )
-                        }
-                        initTabs()
-                    }
-                }, { error ->
-                    Toast.makeText(requireContext(), error.message, Toast.LENGTH_LONG).show()
-                })
-        )
+    private fun bindViewModel() {
+        viewModel.callsDataLiveData().observe(viewLifecycleOwner) {
+            initTabs(it)
+        }
     }
 
-    private fun addEntities() {
-        val dao =
-            (requireActivity().application as CallDefenderApp).getAppDatabase().callEntityDao()
-        disposables.add(
-            dao.insert(viewModel.entity)
-                .subscribeOn(Schedulers.io()) // Операции с базой данных выполняются в фоновом потоке
-                .observeOn(AndroidSchedulers.mainThread()) // Результаты обрабатываются в UI-потоке
-                .subscribe({
-                    Toast.makeText(
-                        requireContext(),
-                        "call inserted successfully",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    initTabs()
-                }, {
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
-                })
-        )
-    }
-
-    private fun initTabs() {
+    private fun initTabs(data: List<List<CallUi>>) {
         val adapter = ViewPagerAdapter(data)
         with(binding) {
             viewPager.adapter = adapter

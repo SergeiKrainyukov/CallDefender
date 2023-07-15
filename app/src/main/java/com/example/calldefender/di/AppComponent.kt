@@ -3,20 +3,18 @@ package com.example.calldefender.di
 import com.example.calldefender.ui.MainActivity
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
 import dagger.Component
+import javax.inject.Singleton
 
+@Singleton
 @Component(
     modules = [
-        MainModule::class,
-        ViewModelModule::class
+        PermissionsControllerModule::class,
+        ViewModelModule::class,
+        DataModule::class,
+        AppModule::class
     ]
 )
-interface MainComponent {
+interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(fragment: CallsFragment)
-
-    companion object {
-        fun create(): MainComponent {
-            return DaggerMainComponent.builder().build()
-        }
-    }
 }

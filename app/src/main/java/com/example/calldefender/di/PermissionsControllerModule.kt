@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class MainModule {
+class PermissionsControllerModule {
     @Provides
     fun providePermissionsController(): PermissionsController = PermissionControllerImpl()
 }
