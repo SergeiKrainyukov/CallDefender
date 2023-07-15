@@ -4,17 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.databinding.FragmentCallsBinding
 import com.example.calldefender.ui.fragment.callsFragment.adapter.ViewPagerAdapter
-import com.example.calldefender.ui.model.CallUi
+import com.example.calldefender.ui.model.CallType
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.disposables.CompositeDisposable
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 class CallsFragment : Fragment() {
@@ -22,7 +19,6 @@ class CallsFragment : Fragment() {
     @Inject
     lateinit var viewModel: CallsFragmentViewModel
     private lateinit var binding: FragmentCallsBinding
-    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,40 +37,24 @@ class CallsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
+        initTabs()
         viewModel.init()
     }
 
     private fun bindViewModel() {
         viewModel.callsDataLiveData().observe(viewLifecycleOwner) {
-            initTabs(it)
+
         }
     }
 
-    private fun initTabs(data: List<List<CallUi>>) {
-        val adapter = ViewPagerAdapter(data)
+    private fun initTabs() {
+        val adapter = ViewPagerAdapter(mutableListOf())
         with(binding) {
             viewPager.adapter = adapter
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = when (position) {
-                    0 -> getString(R.string.all_calls)
-                    else -> getString(R.string.rejected_calls)
-                }
+                tab.setCustomView(R.layout.item_tab)
+                (tab.customView as TextView).text = CallType.values()[position].callStatusName
             }.attach()
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
-    }
-
-}
-
-fun Date.formatToPattern(pattern: String): String =
-    SimpleDateFormat(pattern, Locale.getDefault()).format(
-        time
-    )
-
-enum class DatePatterns(val pattern: String) {
-    DEFAULT("dd.MM.yyyy hh:mm:ss")
 }

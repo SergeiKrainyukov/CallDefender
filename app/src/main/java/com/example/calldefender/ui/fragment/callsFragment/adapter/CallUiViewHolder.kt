@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calldefender.R
-import com.example.calldefender.ui.model.CallStatus
+import com.example.calldefender.ui.model.CallType
 import com.example.calldefender.ui.model.CallUi
 
 class CallUiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -15,15 +15,16 @@ class CallUiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.findViewById<View>(R.id.call_status_indicator).setBackgroundColor(
             ContextCompat.getColor(
                 itemView.context,
-                calculateCallStatusColor(callUi.callStatus)
+                calculateCallStatusColor(callUi.callType)
             )
         )
     }
 
-    private fun calculateCallStatusColor(callStatus: CallStatus): Int {
-        return when (callStatus) {
-            CallStatus.ACCEPTED -> R.color.accepted_call_color
-            CallStatus.REJECTED -> R.color.rejected_call_color
+    private fun calculateCallStatusColor(callType: CallType): Int {
+        return when (callType) {
+            CallType.ACCEPTED -> R.color.accepted_call_color
+            CallType.REJECTED -> R.color.rejected_call_color
+            else -> R.color.accepted_call_color
         }
     }
 }
