@@ -32,7 +32,7 @@ class CallsFragment : Fragment() {
     @Inject
     lateinit var callEntityDao: CallEntityDao
 
-    private val updateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private val updateUIReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             viewModel.getCalls()
         }
@@ -62,12 +62,12 @@ class CallsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         LocalBroadcastManager.getInstance(requireContext())
-            .registerReceiver(updateReceiver, IntentFilter(UPDATE_CALLS_ACTION))
+            .registerReceiver(updateUIReceiver, IntentFilter(UPDATE_CALLS_ACTION))
     }
 
     override fun onStop() {
         super.onStop()
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateReceiver)
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateUIReceiver)
     }
 
     private fun bindViewModel() {
