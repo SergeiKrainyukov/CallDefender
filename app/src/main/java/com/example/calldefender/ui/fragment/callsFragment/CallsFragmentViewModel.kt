@@ -27,45 +27,33 @@ class CallsFragmentViewModel @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ callEntities ->
-                    if (callEntities.isEmpty()) {
-//                        generateCalls()
-                        return@subscribe
-                    }
-                    val callsFragmentViewPagerAdapterData = CallsFragmentViewPagerAdapterData()
-                    CallType.values().forEach { callType ->
-                        val callsFilteredByType = callEntities.filter { callUi ->
-                            if (callType == CallType.ALL) true else callUi.callType == callType
-                        }
-                        callsFragmentViewPagerAdapterData.update(callsFilteredByType, callType)
-                    }
-                    callsDataLiveData.value = callsFragmentViewPagerAdapterData
+                    if (callEntities.isEmpty()) return@subscribe
+                    callsDataLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
                 }, {})
         )
     }
 
-    private fun generateCalls() {
+    fun getCalls() {
         disposables.add(
-            callsRepository.addCall(
-                CallUi(
-                    "+79611877192",
-                    "08.10.2022 14:11:28",
-                    CallType.ACCEPTED
-                )
-            ).subscribeOn(Schedulers.io())
+            callsRepository.getCalls()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+                .subscribe({ callEntities ->
+                    if (callEntities.isEmpty()) return@subscribe
+                    callsDataLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
+                }, {})
         )
-        disposables.add(
-            callsRepository.addCall(
-                CallUi(
-                    "+79621899194",
-                    "08.12.2022 12:05:37",
-                    CallType.REJECTED
-                )
-            ).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-        )
+    }
+
+    private fun prepareCallsFragmentViewPagerAdapterData(callEntities: List<CallUi>): CallsFragmentViewPagerAdapterData {
+        val callsFragmentViewPagerAdapterData = CallsFragmentViewPagerAdapterData()
+        CallType.values().forEach { callType ->
+            val callsFilteredByType = callEntities.filter { callUi ->
+                if (callType == CallType.ALL) true else callUi.callType == callType
+            }
+            callsFragmentViewPagerAdapterData.update(callsFilteredByType, callType)
+        }
+        return callsFragmentViewPagerAdapterData
     }
 
     override fun onCleared() {

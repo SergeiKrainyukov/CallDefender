@@ -1,13 +1,19 @@
 package com.example.calldefender.ui.fragment.callsFragment
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
+import com.example.calldefender.common.UPDATE_CALLS_ACTION
 import com.example.calldefender.data.CallEntityDao
 import com.example.calldefender.databinding.FragmentCallsBinding
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapter
@@ -15,6 +21,7 @@ import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentV
 import com.example.calldefender.ui.model.CallType
 import com.google.android.material.tabs.TabLayoutMediator
 import javax.inject.Inject
+
 
 class CallsFragment : Fragment() {
 
@@ -24,6 +31,12 @@ class CallsFragment : Fragment() {
 
     @Inject
     lateinit var callEntityDao: CallEntityDao
+
+    private val updateReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            viewModel.getCalls()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +57,17 @@ class CallsFragment : Fragment() {
         bindViewModel()
         initTabs()
         viewModel.init()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(updateReceiver, IntentFilter(UPDATE_CALLS_ACTION))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateReceiver)
     }
 
     private fun bindViewModel() {

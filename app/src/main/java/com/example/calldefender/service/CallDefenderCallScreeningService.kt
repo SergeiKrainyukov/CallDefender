@@ -2,11 +2,14 @@ package com.example.calldefender.service
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.provider.ContactsContract
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.common.DatePatterns
+import com.example.calldefender.common.UPDATE_CALLS_ACTION
 import com.example.calldefender.common.formatToPattern
 import com.example.calldefender.common.parseCountryCode
 import com.example.calldefender.common.removeTelPrefix
@@ -17,6 +20,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.Date
 import javax.inject.Inject
+
 
 class CallDefenderCallScreeningService: CallScreeningService() {
     @Inject
@@ -46,6 +50,7 @@ class CallDefenderCallScreeningService: CallScreeningService() {
             setSkipCallLog(false)
             addCallToRepository(phoneNumber, CallType.REJECTED)
         }
+        updateUI()
         return response
     }
 
@@ -83,6 +88,11 @@ class CallDefenderCallScreeningService: CallScreeningService() {
         ).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
+    }
+
+    private fun updateUI() {
+        val intent = Intent(UPDATE_CALLS_ACTION)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
 }
