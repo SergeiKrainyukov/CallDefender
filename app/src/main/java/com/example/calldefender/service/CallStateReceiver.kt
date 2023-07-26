@@ -9,18 +9,22 @@ import android.telephony.TelephonyManager
 class CallStateReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED) && isInitialized) {
-            val telephonyManager =
-                context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            telephonyManager.listen(
-                CallDefenderPhoneStateListener(context),
-                PhoneStateListener.LISTEN_CALL_STATE
-            )
-            isInitialized = true
+        if (intent.action.equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
+            if (telephonyManager == null) {
+                telephonyManager =
+                    context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                if (phoneStateListener == null)
+                    phoneStateListener = CallDefenderPhoneStateListener(context)
+                telephonyManager?.listen(
+                    phoneStateListener,
+                    PhoneStateListener.LISTEN_CALL_STATE
+                )
+            }
         }
     }
 
     companion object {
-        private var isInitialized = false
+        var phoneStateListener: PhoneStateListener? = null
+        var telephonyManager: TelephonyManager? = null
     }
 }
