@@ -71,7 +71,8 @@ class PermissionControllerImpl : PermissionsController {
                 requestBasePermissions(
                     activity, arrayOf(
                         Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_CONTACTS
+                        Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.READ_CALL_LOG,
                     )
                 )
             } else {

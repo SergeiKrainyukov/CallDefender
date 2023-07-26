@@ -6,6 +6,7 @@ import com.example.calldefender.di.modules.PermissionsControllerModule
 import com.example.calldefender.di.modules.RepositoryModule
 import com.example.calldefender.di.modules.ViewModelModule
 import com.example.calldefender.service.CallDefenderCallScreeningService
+import com.example.calldefender.service.CallDefenderPhoneStateListener
 import com.example.calldefender.ui.MainActivity
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
 import dagger.Component
@@ -25,4 +26,5 @@ interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(fragment: CallsFragment)
     fun inject(service: CallDefenderCallScreeningService)
+    fun inject(service: CallDefenderPhoneStateListener)
 }

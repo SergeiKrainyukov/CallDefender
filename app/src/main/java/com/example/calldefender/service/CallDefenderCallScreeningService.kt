@@ -21,8 +21,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.Date
 import javax.inject.Inject
 
-
-class CallDefenderCallScreeningService: CallScreeningService() {
+class CallDefenderCallScreeningService : CallScreeningService() {
     @Inject
     lateinit var repository: CallsRepository
 
