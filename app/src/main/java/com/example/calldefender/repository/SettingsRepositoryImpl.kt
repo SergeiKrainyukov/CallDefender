@@ -25,7 +25,7 @@ class SettingsRepositoryImpl @Inject constructor(
         appContext.getSharedPreferences(DEFAULT_PREFERENCES_NAME, MODE_PRIVATE).edit()
             .putBoolean(
                 Setting.BlockUnfamiliarCallsSetting.NAME,
-                blockUnfamiliarCallsSetting.isChecked
+                blockUnfamiliarCallsSetting.isEnabled
             ).apply()
     }
 
