@@ -11,5 +11,6 @@
 
     <!-- SettingsFragment -->
     <string name="settings">Настройки</string>
+    <string name="block_unfamiliar_calls_setting">Блокировка вызовов с незнакомых номеров</string>
 
 </resources>
