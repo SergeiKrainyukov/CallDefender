@@ -8,7 +8,7 @@ import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.common.PermissionsController
 import com.example.calldefender.databinding.ActivityMainBinding
-import com.example.calldefender.ui.fragment.SettingsFragment
+import com.example.calldefender.ui.fragment.settingsFragment.SettingsFragment
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
 import javax.inject.Inject
 

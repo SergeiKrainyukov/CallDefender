@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.calldefender.di.AppViewModelFactory
 import com.example.calldefender.di.ViewModelKey
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragmentViewModel
+import com.example.calldefender.ui.fragment.settingsFragment.SettingsFragmentViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -19,5 +20,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CallsFragmentViewModel::class)
     internal abstract fun bindCallsFragmentViewModel(viewModel: CallsFragmentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsFragmentViewModel::class)
+    internal abstract fun bindSettingsFragmentViewModel(viewModel: SettingsFragmentViewModel): ViewModel
 
 }
