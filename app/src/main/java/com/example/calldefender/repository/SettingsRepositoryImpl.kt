@@ -1,45 +1,40 @@
 package com.example.calldefender.repository
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import com.example.calldefender.ui.model.Setting
+import com.example.calldefender.common.BLOCK_UNFAMILIAR_CALLS_SETTING_ID
+import com.example.calldefender.data.SettingEntity
+import com.example.calldefender.data.SettingEntityDao
+import com.example.calldefender.ui.model.SettingUI
 import javax.inject.Inject
 
 class SettingsRepositoryImpl @Inject constructor(
-    private val appContext: Context
+    private val settingEntityDao: SettingEntityDao,
 ) : SettingsRepository {
-    override fun update(setting: Setting) {
-        when (setting) {
-            is Setting.BlockUnfamiliarCallsSetting -> updateBlockUnfamiliarCallsSetting(setting)
-            Setting.EmptySetting -> {}
+    override fun update(settingUI: SettingUI) =
+        settingEntityDao.insert(SettingEntity.from(settingUI))
+
+    override fun getSetting(id: Int) = settingEntityDao.findByType(id).map {
+        mapToUI(it)
+    }
+
+    override fun getAllSettings() =
+        settingEntityDao.getAll().map {
+            it.map {
+                mapToUI(it)
+            }
+        }
+
+    private fun mapToUI(settingEntity: SettingEntity): SettingUI {
+        return when (settingEntity.id) {
+            BLOCK_UNFAMILIAR_CALLS_SETTING_ID -> parseUnfamiliarSettingType(settingEntity)
+            else -> SettingUI.EmptySetting
         }
     }
 
-    override fun getSetting(name: String) = when (name) {
-        Setting.BlockUnfamiliarCallsSetting.NAME -> getBlockUnfamiliarCallsSetting()
-        else -> Setting.EmptySetting
-    }
 
-
-    private fun updateBlockUnfamiliarCallsSetting(blockUnfamiliarCallsSetting: Setting.BlockUnfamiliarCallsSetting) {
-        appContext.getSharedPreferences(DEFAULT_PREFERENCES_NAME, MODE_PRIVATE).edit()
-            .putBoolean(
-                Setting.BlockUnfamiliarCallsSetting.NAME,
-                blockUnfamiliarCallsSetting.isEnabled
-            ).apply()
-    }
-
-    private fun getBlockUnfamiliarCallsSetting() =
-        Setting.BlockUnfamiliarCallsSetting(
-            appContext.getSharedPreferences(DEFAULT_PREFERENCES_NAME, MODE_PRIVATE)
-                .getBoolean(
-                    Setting.BlockUnfamiliarCallsSetting.NAME,
-                    DEFAULT_BLOCK_UNFAMILIAR_CALLS_SETTING
-                )
+    private fun parseUnfamiliarSettingType(settingEntity: SettingEntity): SettingUI.BlockUnfamiliarCallsSettingUI {
+        return SettingUI.BlockUnfamiliarCallsSettingUI(
+            settingName = settingEntity.name,
+            isEnabled = settingEntity.params.toBoolean()
         )
-
-    companion object {
-        private const val DEFAULT_PREFERENCES_NAME = "call_defender_prefs"
-        private const val DEFAULT_BLOCK_UNFAMILIAR_CALLS_SETTING = false
     }
 }
