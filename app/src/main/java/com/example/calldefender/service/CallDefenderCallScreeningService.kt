@@ -40,16 +40,39 @@ class CallDefenderCallScreeningService : CallScreeningService() {
         handlePhoneCall(callDetails, CallResponse.Builder(), phoneNumber)
     }
 
+    @SuppressLint("CheckResult")
     private fun handlePhoneCall(
         callDetails: Details,
         response: CallResponse.Builder,
         phoneNumber: String
     ) {
-        if (isInContacts(applicationContext, phoneNumber)) {
-            respondToCall(callDetails, response.build())
-            return
-        }
-        checkSettings(callDetails, response, phoneNumber)
+        settingsRepository.getAllSettings().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.forEach { settingUI ->
+                    when (settingUI) {
+                        is SettingUI.BlockUnfamiliarCallsSettingUI -> {
+                            if (settingUI.isEnabled) {
+                                if (!isInContacts(applicationContext, phoneNumber)) {
+                                    rejectCall(callDetails, response, phoneNumber)
+                                    updateUI()
+                                    return@subscribe
+                                }
+                                respondToCall(callDetails, response.build())
+                                updateUI()
+                                return@subscribe
+                            }
+                            respondToCall(callDetails, response.build())
+                            updateUI()
+                            return@subscribe
+                        }
+
+                        else -> return@subscribe
+                    }
+                }
+            }, {
+                it.printStackTrace()
+            })
     }
 
     @SuppressLint("Range")
@@ -74,33 +97,6 @@ class CallDefenderCallScreeningService : CallScreeningService() {
             cursor.close()
         }
         return false
-    }
-
-    @SuppressLint("CheckResult")
-    private fun checkSettings(
-        callDetails: Details,
-        response: CallResponse.Builder,
-        phoneNumber: String
-    ) {
-        settingsRepository.getAllSettings().subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                it.forEach {
-                    when (it) {
-                        is SettingUI.BlockUnfamiliarCallsSettingUI -> {
-                            if (it.isEnabled) {
-                                rejectCall(callDetails, response, phoneNumber)
-                                updateUI()
-                                return@subscribe
-                            }
-                        }
-
-                        else -> return@subscribe
-                    }
-                }
-            }, {
-                it.printStackTrace()
-            })
     }
 
     private fun addCallToRepository(callNumber: String, callType: CallType) {
