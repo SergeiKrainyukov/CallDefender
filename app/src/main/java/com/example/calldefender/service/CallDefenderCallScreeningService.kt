@@ -19,6 +19,7 @@ import com.example.calldefender.ui.model.CallType
 import com.example.calldefender.ui.model.CallUi
 import com.example.calldefender.ui.model.SettingUI
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.Date
 import javax.inject.Inject
@@ -30,6 +31,8 @@ class CallDefenderCallScreeningService : CallScreeningService() {
     @Inject
     lateinit var settingsRepository: SettingsRepository
 
+    private val disposables = CompositeDisposable()
+
     override fun onCreate() {
         super.onCreate()
         (application as CallDefenderApp).appComponent.inject(this)
@@ -37,16 +40,8 @@ class CallDefenderCallScreeningService : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Details) {
         val phoneNumber = callDetails.handle.toString().removeTelPrefix().parseCountryCode()
-        handlePhoneCall(callDetails, CallResponse.Builder(), phoneNumber)
-    }
-
-    @SuppressLint("CheckResult")
-    private fun handlePhoneCall(
-        callDetails: Details,
-        response: CallResponse.Builder,
-        phoneNumber: String
-    ) {
-        settingsRepository.getAllSettings().subscribeOn(Schedulers.io())
+        val response = CallResponse.Builder()
+        disposables.add(settingsRepository.getAllSettings().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.forEach { settingUI ->
@@ -73,6 +68,7 @@ class CallDefenderCallScreeningService : CallScreeningService() {
             }, {
                 it.printStackTrace()
             })
+        )
     }
 
     @SuppressLint("Range")
@@ -130,4 +126,8 @@ class CallDefenderCallScreeningService : CallScreeningService() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
+    override fun onDestroy() {
+        disposables.clear()
+        super.onDestroy()
+    }
 }
