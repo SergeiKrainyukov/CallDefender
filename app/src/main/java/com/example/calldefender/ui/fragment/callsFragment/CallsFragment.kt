@@ -14,7 +14,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.common.UPDATE_CALLS_ACTION
-import com.example.calldefender.data.CallEntityDao
 import com.example.calldefender.databinding.FragmentCallsBinding
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapter
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapterData
@@ -28,9 +27,6 @@ class CallsFragment : Fragment() {
     @Inject
     lateinit var viewModel: CallsFragmentViewModel
     private lateinit var binding: FragmentCallsBinding
-
-    @Inject
-    lateinit var callEntityDao: CallEntityDao
 
     private val updateUIReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
