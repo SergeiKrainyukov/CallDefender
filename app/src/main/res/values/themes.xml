@@ -1,9 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.CallDefender" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-    </style>
-
-    <style name="Theme.CallDefender" parent="Base.Theme.CallDefender">
+    <style name="Base.Theme.CallDefender" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_color</item>
     </style>
