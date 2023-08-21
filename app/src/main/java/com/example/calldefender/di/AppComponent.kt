@@ -1,6 +1,7 @@
 package com.example.calldefender.di
 
 import com.example.calldefender.di.modules.AppModule
+import com.example.calldefender.di.modules.ControllerModule
 import com.example.calldefender.di.modules.DataModule
 import com.example.calldefender.di.modules.PermissionsControllerModule
 import com.example.calldefender.di.modules.RepositoryModule
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         PermissionsControllerModule::class,
+        ControllerModule::class,
         ViewModelModule::class,
         DataModule::class,
         AppModule::class,
