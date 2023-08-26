@@ -13,7 +13,7 @@ interface CallEntityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(callEntity: CallEntity): Completable
 
-    @Query("SELECT * FROM callentity")
+    @Query("SELECT * FROM callentity ORDER BY date DESC")
     fun getAll(): Single<List<CallEntity>>
 
     @Query("SELECT * FROM callentity WHERE callNumber LIKE :callNumber")
