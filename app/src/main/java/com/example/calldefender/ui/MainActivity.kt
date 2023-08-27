@@ -1,18 +1,30 @@
 package com.example.calldefender.ui
 
-import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.common.PermissionsController
 import com.example.calldefender.databinding.ActivityMainBinding
-import com.example.calldefender.ui.fragment.settingsFragment.SettingsFragment
 import com.example.calldefender.ui.fragment.callsFragment.CallsFragment
+import com.example.calldefender.ui.fragment.settingsFragment.SettingsFragment
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {}
+    private val requestDialerPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode != android.app.Activity.RESULT_OK) {
+            requestDialerPermission()
+        }
+    }
 
     @Inject
     lateinit var permissionsController: PermissionsController
@@ -30,8 +42,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermissions() {
         with(permissionsController) {
-            registerActivityForRequestPermissions(this@MainActivity)
-            requestDialerPermission(this@MainActivity)
+            val unacceptedPermissions = getUnacceptedPermissions()
+            if (unacceptedPermissions.isNotEmpty()) {
+                requestPermissionLauncher.launch(unacceptedPermissions)
+            }
+            if (isDialerApp()) {
+                return
+            }
+            requestDialerPermission()
         }
     }
 
@@ -54,9 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        permissionsController.handleDialerPermissionResult(this, requestCode, resultCode)
+    private fun requestDialerPermission() {
+        requestDialerPermissionLauncher.launch(permissionsController.createDialerPermissionIntent())
     }
 }

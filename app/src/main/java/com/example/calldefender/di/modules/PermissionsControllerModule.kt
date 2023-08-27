@@ -2,11 +2,11 @@ package com.example.calldefender.di.modules
 
 import com.example.calldefender.common.PermissionControllerImpl
 import com.example.calldefender.common.PermissionsController
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Module
-class PermissionsControllerModule {
-    @Provides
-    fun providePermissionsController(): PermissionsController = PermissionControllerImpl()
+abstract class PermissionsControllerModule {
+    @Binds
+    abstract fun providePermissionsController(permissionsController: PermissionControllerImpl): PermissionsController
 }
