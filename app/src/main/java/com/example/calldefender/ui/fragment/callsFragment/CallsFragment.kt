@@ -67,7 +67,7 @@ class CallsFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.callsDataLiveData().observe(viewLifecycleOwner) {
+        viewModel.callsLiveData.observe(viewLifecycleOwner) {
             (binding.viewPager.adapter as CallsFragmentViewPagerAdapter).setData(it)
         }
     }

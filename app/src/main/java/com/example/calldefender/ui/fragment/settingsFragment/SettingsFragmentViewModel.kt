@@ -14,8 +14,9 @@ class SettingsFragmentViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private val settingsLiveData = MutableLiveData<List<SettingUI>>()
-    fun settingsLiveData(): LiveData<List<SettingUI>> = settingsLiveData
+    private val _settingsLiveData = MutableLiveData<List<SettingUI>>()
+    val settingsLiveData: LiveData<List<SettingUI>>
+        get() = _settingsLiveData
 
     private val disposables = CompositeDisposable()
 
@@ -23,7 +24,7 @@ class SettingsFragmentViewModel @Inject constructor(
         disposables.add(
             settingsRepository.getAllSettings().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe({
-                    settingsLiveData.value = it
+                    _settingsLiveData.value = it
                 }, {
                     it.printStackTrace()
                 })

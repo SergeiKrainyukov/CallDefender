@@ -18,8 +18,9 @@ class CallsFragmentViewModel @Inject constructor(
 
     private val disposables = CompositeDisposable()
 
-    private val callsDataLiveData = MutableLiveData<CallsFragmentViewPagerAdapterData>()
-    fun callsDataLiveData(): LiveData<CallsFragmentViewPagerAdapterData> = callsDataLiveData
+    private val _callsLiveData = MutableLiveData<CallsFragmentViewPagerAdapterData>()
+    val callsLiveData: LiveData<CallsFragmentViewPagerAdapterData>
+        get() = _callsLiveData
 
     fun init() {
         disposables.add(
@@ -28,7 +29,7 @@ class CallsFragmentViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ callEntities ->
                     if (callEntities.isEmpty()) return@subscribe
-                    callsDataLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
+                    _callsLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
                 }, {})
         )
     }
@@ -40,7 +41,7 @@ class CallsFragmentViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ callEntities ->
                     if (callEntities.isEmpty()) return@subscribe
-                    callsDataLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
+                    _callsLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
                 }, {})
         )
     }

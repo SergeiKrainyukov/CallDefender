@@ -51,7 +51,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.settingsLiveData().observe(viewLifecycleOwner) {
+        viewModel.settingsLiveData.observe(viewLifecycleOwner) {
             it.forEach {
                 when (it){
                     is SettingUI.BlockUnfamiliarCallsSettingUI -> {
