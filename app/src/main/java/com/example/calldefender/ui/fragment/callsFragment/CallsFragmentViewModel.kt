@@ -48,7 +48,7 @@ class CallsFragmentViewModel @Inject constructor(
 
     private fun prepareCallsFragmentViewPagerAdapterData(callEntities: List<CallUi>): CallsFragmentViewPagerAdapterData {
         val callsFragmentViewPagerAdapterData = CallsFragmentViewPagerAdapterData()
-        CallType.values().forEach { callType ->
+        CallType.entries.forEach { callType ->
             val callsFilteredByType = callEntities.filter { callUi ->
                 if (callType == CallType.ALL) true else callUi.callType == callType
             }
