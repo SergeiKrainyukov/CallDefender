@@ -3,13 +3,13 @@ package com.example.calldefender.ui.fragment.callsFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.calldefender.repository.CallsRepository
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapterData
 import com.example.calldefender.ui.model.CallType
 import com.example.calldefender.ui.model.CallUi
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CallsFragmentViewModel @Inject constructor(
@@ -22,35 +22,18 @@ class CallsFragmentViewModel @Inject constructor(
     val callsLiveData: LiveData<CallsFragmentViewPagerAdapterData>
         get() = _callsLiveData
 
-    fun init() {
-        disposables.add(
-            callsRepository.getCalls()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ callEntities ->
-                    if (callEntities.isEmpty()) return@subscribe
-                    _callsLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
-                }, {})
-        )
-    }
-
     fun getCalls() {
-        disposables.add(
-            callsRepository.getCalls()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ callEntities ->
-                    if (callEntities.isEmpty()) return@subscribe
-                    _callsLiveData.value = prepareCallsFragmentViewPagerAdapterData(callEntities)
-                }, {})
-        )
+        viewModelScope.launch {
+            _callsLiveData.value =
+                prepareCallsFragmentViewPagerAdapterData(callsRepository.getCalls())
+        }
     }
 
     private fun prepareCallsFragmentViewPagerAdapterData(callEntities: List<CallUi>): CallsFragmentViewPagerAdapterData {
         val callsFragmentViewPagerAdapterData = CallsFragmentViewPagerAdapterData()
         CallType.entries.forEach { callType ->
             val callsFilteredByType = callEntities.filter { callUi ->
-                if (callType == CallType.ALL) true else callUi.callType == callType
+                callType == CallType.ALL || callUi.callType == callType
             }
             callsFragmentViewPagerAdapterData.update(callsFilteredByType, callType)
         }

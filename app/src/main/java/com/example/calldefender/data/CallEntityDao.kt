@@ -14,7 +14,7 @@ interface CallEntityDao {
     fun insert(callEntity: CallEntity): Completable
 
     @Query("SELECT * FROM callentity ORDER BY date DESC")
-    fun getAll(): Single<List<CallEntity>>
+    suspend fun getAll(): List<CallEntity>
 
     @Query("SELECT * FROM callentity WHERE callNumber LIKE :callNumber")
     fun findByCallNumber(callNumber: String): Single<CallEntity>

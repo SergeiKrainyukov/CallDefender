@@ -20,7 +20,7 @@ ext {
     dagger_compiler = "2.42"
 
     //Room
-    room = "2.5.2"
+    room = "2.6.1"
 
     //RxJava2
     rxjava = "2.2.13"

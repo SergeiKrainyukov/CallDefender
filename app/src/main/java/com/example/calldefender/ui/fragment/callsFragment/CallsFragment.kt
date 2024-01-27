@@ -52,7 +52,7 @@ class CallsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
         initTabs()
-        viewModel.init()
+        viewModel.getCalls()
     }
 
     override fun onStart() {
@@ -78,7 +78,7 @@ class CallsFragment : Fragment() {
             viewPager.adapter = adapter
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.setCustomView(R.layout.item_tab)
-                (tab.customView as TextView).text = CallType.values()[position].callStatusName
+                (tab.customView as TextView).text = CallType.entries[position].callStatusName
             }.attach()
         }
     }
