@@ -9,18 +9,14 @@ import javax.inject.Inject
 class SettingsRepositoryImpl @Inject constructor(
     private val settingEntityDao: SettingEntityDao,
 ) : SettingsRepository {
-    override fun update(settingUI: SettingUI) =
+    override suspend fun update(settingUI: SettingUI) =
         settingEntityDao.insert(SettingEntity.from(settingUI))
 
-    override fun getSetting(id: Int) = settingEntityDao.findByType(id).map {
-        mapToUI(it)
-    }
+    override suspend fun getSetting(id: Int) = settingEntityDao.findByType(id)?.let { mapToUI(it) }
 
-    override fun getAllSettings() =
+    override suspend fun getAllSettings() =
         settingEntityDao.getAll().map {
-            it.map {
-                mapToUI(it)
-            }
+            mapToUI(it)
         }
 
     private fun mapToUI(settingEntity: SettingEntity): SettingUI {

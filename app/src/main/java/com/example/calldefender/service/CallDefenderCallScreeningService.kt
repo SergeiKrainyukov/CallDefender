@@ -13,9 +13,7 @@ import com.example.calldefender.common.removeTelPrefix
 import com.example.calldefender.repository.CallsRepository
 import com.example.calldefender.ui.model.CallType
 import com.example.calldefender.ui.model.CallUi
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,17 +38,13 @@ class CallDefenderCallScreeningService : CallScreeningService() {
     override fun onScreenCall(callDetails: Details) {
         val phoneNumber = callDetails.handle.toString().removeTelPrefix().parseCountryCode()
         val response = CallResponse.Builder()
-        disposables.add(
-            callStatusController.checkPhone(phoneNumber).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    if (it) {
-                        respondToCall(callDetails, response.build())
-                    } else {
-                        rejectCall(callDetails, response, phoneNumber)
-                    }
-                    updateUI()
-                }
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            if (callStatusController.checkPhone(phoneNumber)) respondToCall(
+                callDetails,
+                response.build()
+            ) else rejectCall(callDetails, response, phoneNumber)
+            updateUI()
+        }
     }
 
     private fun addCallToDb(callNumber: String, callType: CallType) {
