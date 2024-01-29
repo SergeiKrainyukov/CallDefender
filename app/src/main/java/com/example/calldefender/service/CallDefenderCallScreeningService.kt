@@ -13,7 +13,6 @@ import com.example.calldefender.common.removeTelPrefix
 import com.example.calldefender.repository.CallsRepository
 import com.example.calldefender.ui.model.CallType
 import com.example.calldefender.ui.model.CallUi
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,8 +26,6 @@ class CallDefenderCallScreeningService : CallScreeningService() {
 
     @Inject
     lateinit var callStatusController: CallStatusController
-
-    private val disposables = CompositeDisposable()
 
     override fun onCreate() {
         super.onCreate()
@@ -77,10 +74,5 @@ class CallDefenderCallScreeningService : CallScreeningService() {
     private fun updateUI() {
         val intent = Intent(UPDATE_CALLS_ACTION)
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-    }
-
-    override fun onDestroy() {
-        disposables.clear()
-        super.onDestroy()
     }
 }

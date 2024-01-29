@@ -4,33 +4,3 @@ plugins {
     id 'com.android.library' version '8.0.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.9.0' apply false
 }
-
-ext {
-    //Core
-    core_ktx = "1.10.1"
-    appcompat = "1.6.1"
-    material = "1.9.0"
-    constraint_layout = "2.1.4"
-
-    //Lifecycle
-    lifecycle = "2.6.1"
-
-    //Dagger
-    dagger = "2.46.1"
-    dagger_compiler = "2.42"
-
-    //Room
-    room = "2.6.1"
-
-    //RxJava2
-    rxjava = "2.2.13"
-    rxandroid = "2.1.1"
-
-    //Gson
-    gson = "2.9.0"
-
-    //Testing
-    junit = "4.13.2"
-    android_junit = "1.1.5"
-    espresso_core = "3.5.1"
-}
