@@ -16,6 +16,9 @@ import com.example.calldefender.ui.model.CallUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
@@ -50,16 +53,17 @@ class CallDefenderCallScreeningService : CallScreeningService() {
         )
     }
 
-    private fun addCallToRepository(callNumber: String, callType: CallType) {
-        callsRepository.addCall(
-            CallUi(
-                callNumber,
-                Date().formatToPattern(DatePatterns.DEFAULT.pattern),
-                callType
+    private fun addCallToDb(callNumber: String, callType: CallType) {
+        CoroutineScope(Dispatchers.IO).launch {
+            callsRepository.addCall(
+                CallUi(
+                    callNumber,
+                    Date().formatToPattern(DatePatterns.DEFAULT.pattern),
+                    callType
+                )
             )
-        ).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
+            updateUI()
+        }
     }
 
     private fun rejectCall(
@@ -73,7 +77,7 @@ class CallDefenderCallScreeningService : CallScreeningService() {
             setSkipCallLog(false)
         }.build()
         respondToCall(callDetails, callResponse)
-        addCallToRepository(phoneNumber, CallType.REJECTED)
+        addCallToDb(phoneNumber, CallType.REJECTED)
     }
 
     private fun updateUI() {

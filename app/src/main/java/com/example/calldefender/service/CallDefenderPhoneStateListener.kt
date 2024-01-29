@@ -12,9 +12,9 @@ import com.example.calldefender.common.formatToPattern
 import com.example.calldefender.repository.CallsRepository
 import com.example.calldefender.ui.model.CallType
 import com.example.calldefender.ui.model.CallUi
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
@@ -23,11 +23,10 @@ class CallDefenderPhoneStateListener(
 ) : PhoneStateListener() {
 
     private var isAcceptedCall = false
-    private val disposables = CompositeDisposable()
 
     @Inject
     lateinit var repository: CallsRepository
-    
+
     init {
         (context.applicationContext as CallDefenderApp).appComponent.inject(this)
     }
@@ -53,20 +52,16 @@ class CallDefenderPhoneStateListener(
     }
 
     private fun addCallToRepository(callNumber: String, callType: CallType) {
-        disposables.add(repository.addCall(
-            CallUi(
-                callNumber,
-                Date().formatToPattern(DatePatterns.DEFAULT.pattern),
-                callType
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.addCall(
+                CallUi(
+                    callNumber,
+                    Date().formatToPattern(DatePatterns.DEFAULT.pattern),
+                    callType
+                )
             )
-        ).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                updateUI(context)
-            }, {
-
-            })
-        )
+            updateUI(context)
+        }
     }
 
     private fun updateUI(context: Context) {
