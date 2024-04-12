@@ -1,20 +1,27 @@
 package com.example.calldefender.ui.fragment.callsFragment
 
+import android.Manifest
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.calldefender.CallDefenderApp
 import com.example.calldefender.R
 import com.example.calldefender.common.UPDATE_CALLS_ACTION
 import com.example.calldefender.databinding.FragmentCallsBinding
+import com.example.calldefender.ui.MainActivity
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapter
 import com.example.calldefender.ui.fragment.callsFragment.adapter.CallsFragmentViewPagerAdapterData
 import com.example.calldefender.ui.model.CallType
